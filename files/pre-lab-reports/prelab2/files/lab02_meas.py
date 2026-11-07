@@ -5,9 +5,9 @@
 # SPDX-License-Identifier: GPL-3.0
 #
 # GNU Radio Python Flow Graph
-# Title: Lab02 - receive-only RF measurements
+# Title: Lab02 - ADALM-PLUTO receive-only measurements
 # Author: SDR Lab
-# Description: RTLSDR preparation; set center_freq and supported gain for actual hardware; AGC off
+# Description: ADALM-PLUTO with IIO source; manual gain, AGC off; assigned team gain not announced
 # GNU Radio version: 3.10.12.0
 
 from PyQt5 import Qt
@@ -24,7 +24,7 @@ from PyQt5 import Qt
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
-from gnuradio import soapy
+from gnuradio import iio
 import math
 import sip
 import threading
@@ -34,9 +34,9 @@ import threading
 class lab02_meas(gr.top_block, Qt.QWidget):
 
     def __init__(self):
-        gr.top_block.__init__(self, "Lab02 - receive-only RF measurements", catch_exceptions=True)
+        gr.top_block.__init__(self, "Lab02 - ADALM-PLUTO receive-only measurements", catch_exceptions=True)
         Qt.QWidget.__init__(self)
-        self.setWindowTitle("Lab02 - receive-only RF measurements")
+        self.setWindowTitle("Lab02 - ADALM-PLUTO receive-only measurements")
         qtgui.util.check_set_qss()
         try:
             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
@@ -67,13 +67,13 @@ class lab02_meas(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
-        self.samp_rate = samp_rate = 2.048e6
+        self.samp_rate = samp_rate = 2048000
         self.gain = gain = 0
         self.freq_error_hz = freq_error_hz = 0
         self.f_noise = f_noise = -500e3
         self.f2 = f2 = 400e3
         self.f1 = f1 = 300e3
-        self.center_freq = center_freq = 100e6
+        self.center_freq = center_freq = 800000000
         self.bw_tone = bw_tone = 10e3
         self.bw_noise = bw_noise = 400e3
 
@@ -81,7 +81,7 @@ class lab02_meas(gr.top_block, Qt.QWidget):
         # Blocks
         ##################################################
 
-        self._gain_range = qtgui.Range(0, 50, 1, 0, 200)
+        self._gain_range = qtgui.Range(0, 73, 1, 0, 200)
         self._gain_win = qtgui.RangeWidget(self._gain_range, self.set_gain, "Manual RF gain (dB); AGC off", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._gain_win)
         self.total_rms = blocks.rms_cf((1e-4))
@@ -200,41 +200,16 @@ class lab02_meas(gr.top_block, Qt.QWidget):
 
         self._spec_win = sip.wrapinstance(self.spec.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._spec_win)
-        self.rtl_source = None
-        dev = 'driver=rtlsdr'
-        stream_args = 'bufflen=16384'
-        tune_args = ['']
-        settings = ['']
-
-        def _set_rtl_source_gain_mode(channel, agc):
-            self.rtl_source.set_gain_mode(channel, agc)
-            if not agc:
-                  self.rtl_source.set_gain(channel, self._rtl_source_gain_value)
-        self.set_rtl_source_gain_mode = _set_rtl_source_gain_mode
-
-        def _set_rtl_source_gain(channel, name, gain):
-            self._rtl_source_gain_value = gain
-            if not self.rtl_source.get_gain_mode(channel):
-                self.rtl_source.set_gain(channel, gain)
-        self.set_rtl_source_gain = _set_rtl_source_gain
-
-        def _set_rtl_source_bias(bias):
-            if 'biastee' in self._rtl_source_setting_keys:
-                self.rtl_source.write_setting('biastee', bias)
-        self.set_rtl_source_bias = _set_rtl_source_bias
-
-        self.rtl_source = soapy.source(dev, "fc32", 1, '',
-                                  stream_args, tune_args, settings)
-
-        self._rtl_source_setting_keys = [a.key for a in self.rtl_source.get_setting_info()]
-
-        self.rtl_source.set_sample_rate(0, samp_rate)
-        self.rtl_source.set_frequency(0, center_freq)
-        self.rtl_source.set_frequency_correction(0, 0)
-        self.set_rtl_source_bias(bool(False))
-        self._rtl_source_gain_value = gain
-        self.set_rtl_source_gain_mode(0, bool(False))
-        self.set_rtl_source_gain(0, 'TUNER', gain)
+        self.pluto_source = iio.fmcomms2_source_fc32('' if '' else iio.get_pluto_uri(), [True, True], 32768)
+        self.pluto_source.set_len_tag_key('packet_len')
+        self.pluto_source.set_frequency(center_freq)
+        self.pluto_source.set_samplerate(samp_rate)
+        self.pluto_source.set_gain_mode(0, 'manual')
+        self.pluto_source.set_gain(0, gain)
+        self.pluto_source.set_quadrature(True)
+        self.pluto_source.set_rfdc(True)
+        self.pluto_source.set_bbdc(True)
+        self.pluto_source.set_filter_params('Auto', '', 0, 0)
         self.noise_rms = blocks.rms_cf((2e-5))
         self.noise_num = qtgui.number_sink(
             gr.sizeof_float,
@@ -299,7 +274,7 @@ class lab02_meas(gr.top_block, Qt.QWidget):
         self.connect((self.noise_band, 0), (self.noise_rms, 0))
         self.connect((self.noise_db, 0), (self.noise_num, 0))
         self.connect((self.noise_rms, 0), (self.noise_db, 0))
-        self.connect((self.rtl_source, 0), (self.fine_rotator, 0))
+        self.connect((self.pluto_source, 0), (self.fine_rotator, 0))
         self.connect((self.t1_band, 0), (self.t1_rms, 0))
         self.connect((self.t1_db, 0), (self.tone_num, 0))
         self.connect((self.t1_rms, 0), (self.t1_db, 0))
@@ -329,7 +304,7 @@ class lab02_meas(gr.top_block, Qt.QWidget):
         self.im_lo_band.set_taps(firdes.low_pass(1, self.samp_rate, self.bw_tone/2, self.bw_tone/2))
         self.im_hi_band.set_taps(firdes.low_pass(1, self.samp_rate, self.bw_tone/2, self.bw_tone/2))
         self.spec.set_frequency_range(0, self.samp_rate)
-        self.rtl_source.set_sample_rate(0, self.samp_rate)
+        self.pluto_source.set_samplerate(self.samp_rate)
         self.fine_rotator.set_phase_inc((-2*math.pi*self.freq_error_hz/self.samp_rate))
 
     def get_gain(self):
@@ -337,7 +312,7 @@ class lab02_meas(gr.top_block, Qt.QWidget):
 
     def set_gain(self, gain):
         self.gain = gain
-        self.set_rtl_source_gain(0, 'TUNER', self.gain)
+        self.pluto_source.set_gain(0, self.gain)
 
     def get_freq_error_hz(self):
         return self.freq_error_hz
@@ -376,7 +351,7 @@ class lab02_meas(gr.top_block, Qt.QWidget):
 
     def set_center_freq(self, center_freq):
         self.center_freq = center_freq
-        self.rtl_source.set_frequency(0, self.center_freq)
+        self.pluto_source.set_frequency(self.center_freq)
 
     def get_bw_tone(self):
         return self.bw_tone

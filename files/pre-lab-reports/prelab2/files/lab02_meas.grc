@@ -4,10 +4,11 @@ options:
     catch_exceptions: 'True'
     category: '[GRC Hier Blocks]'
     cmake_opt: ''
-    comment: Hardware is not tested. 100 MHz is a configurable receive tuning default.
+    comment: ADALM-PLUTO receive-only preparation. 800 MHz is a prelab assumption.
+      Hardware not tested.
     copyright: ''
-    description: RTLSDR preparation; set center_freq and supported gain for actual
-      hardware; AGC off
+    description: ADALM-PLUTO with IIO source; manual gain, AGC off; assigned team
+      gain not announced
     gen_cmake: 'On'
     gen_linking: dynamic
     generate_options: qt_gui
@@ -23,7 +24,7 @@ options:
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: Lab02 - receive-only RF measurements
+    title: Lab02 - ADALM-PLUTO receive-only measurements
     window_size: (1000,1000)
   states:
     bus_sink: false
@@ -61,7 +62,7 @@ blocks:
     affinity: ''
     minoutbuf: '0'
     maxoutbuf: '0'
-    value: 2.048e6
+    value: '2048000'
   states:
     bus_sink: false
     bus_source: false
@@ -75,14 +76,14 @@ blocks:
   id: variable_qtgui_range
   parameters:
     alias: ''
-    comment: ''
+    comment: Initial gain 0 dB is a starting setting, not the assigned group gain.
     affinity: ''
     minoutbuf: '0'
     maxoutbuf: '0'
     label: Manual RF gain (dB); AGC off
     value: '0'
     start: '0'
-    stop: '50'
+    stop: '73'
     step: '1'
     widget: counter_slider
     rangeType: float
@@ -678,7 +679,7 @@ blocks:
 - name: center_freq
   id: variable
   parameters:
-    value: 100e6
+    value: '800000000'
   states:
     bus_sink: false
     bus_source: false
@@ -701,18 +702,25 @@ blocks:
     - 8
     rotation: 0
     state: enabled
-- name: rtl_source
-  id: soapy_rtlsdr_source
+- name: pluto_source
+  id: iio_pluto_source
   parameters:
     type: fc32
-    dev_args: ''
-    samp_rate: samp_rate
-    center_freq: center_freq
-    freq_correction: '0'
-    agc: 'False'
-    gain: gain
-    bias: 'False'
-    bufflen: '16384'
+    uri: ''
+    frequency: center_freq
+    samplerate: samp_rate
+    buffer_size: '32768'
+    quadrature: 'True'
+    rfdc: 'True'
+    bbdc: 'True'
+    gain1: '''manual'''
+    manual_gain1: gain
+    len_tag_key: packet_len
+    filter_source: '''Auto'''
+    filter: ''
+    fpass: '0'
+    fstop: '0'
+    bandwidth: '1500000'
   states:
     bus_sink: false
     bus_source: false
@@ -833,7 +841,7 @@ connections:
   - '0'
   - spec
   - '0'
-- - rtl_source
+- - pluto_source
   - '0'
   - fine_rotator
   - '0'
