@@ -1,0 +1,842 @@
+options:
+  parameters:
+    author: SDR Lab
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: Hardware is not tested. 100 MHz is a configurable receive tuning default.
+    copyright: ''
+    description: RTLSDR preparation; set center_freq and supported gain for actual
+      hardware; AGC off
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: lab02_meas
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Lab02 - receive-only RF measurements
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 8
+    - 8
+    rotation: 0
+    state: enabled
+blocks:
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    imports: import math
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 198
+    - 8
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    value: 2.048e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 388
+    - 8
+    rotation: 0
+    state: enabled
+- name: gain
+  id: variable_qtgui_range
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    label: Manual RF gain (dB); AGC off
+    value: '0'
+    start: '0'
+    stop: '50'
+    step: '1'
+    widget: counter_slider
+    rangeType: float
+    orient: QtCore.Qt.Horizontal
+    min_len: '200'
+    gui_hint: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 578
+    - 118
+    rotation: 0
+    state: enabled
+- name: f1
+  id: variable
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    value: 300e3
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 8
+    - 558
+    rotation: 0
+    state: enabled
+- name: f2
+  id: variable
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    value: 400e3
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 198
+    - 558
+    rotation: 0
+    state: enabled
+- name: f_noise
+  id: variable
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    value: -500e3
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 388
+    - 558
+    rotation: 0
+    state: enabled
+- name: bw_noise
+  id: variable
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    value: 400e3
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 578
+    - 558
+    rotation: 0
+    state: enabled
+- name: bw_tone
+  id: variable
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    value: 10e3
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 768
+    - 558
+    rotation: 0
+    state: enabled
+- name: noise_band
+  id: freq_xlating_fir_filter_xxx
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    type: ccf
+    decim: '4'
+    taps: firdes.low_pass(1, samp_rate, bw_noise/2, bw_noise/4)
+    center_freq: f_noise
+    samp_rate: samp_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 958
+    - 558
+    rotation: 0
+    state: enabled
+- name: noise_rms
+  id: blocks_rms_xx
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    type: complex
+    alpha: 2e-5
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1148
+    - 558
+    rotation: 0
+    state: enabled
+- name: noise_db
+  id: blocks_nlog10_ff
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    n: '20'
+    k: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 8
+    - 668
+    rotation: 0
+    state: enabled
+- name: noise_num
+  id: qtgui_number_sink
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    name: '"Noise power in the 400 kHz band (dBFS)"'
+    type: float
+    autoscale: 'False'
+    avg: '0'
+    graph_type: qtgui.NUM_GRAPH_HORIZ
+    nconnections: '1'
+    min: '-120'
+    max: '0'
+    update_time: '0.10'
+    gui_hint: ''
+    label1: ''
+    unit1: dBFS
+    color1: ("black", "black")
+    factor1: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 198
+    - 668
+    rotation: 0
+    state: enabled
+- name: tone_num
+  id: qtgui_number_sink
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    name: '"Tone meters (10 kHz each)"'
+    type: float
+    autoscale: 'False'
+    avg: '0'
+    graph_type: qtgui.NUM_GRAPH_NONE
+    nconnections: '4'
+    min: '-140'
+    max: '0'
+    update_time: '0.10'
+    label1: '"f1 (dBFS)"'
+    label2: '"f2 (dBFS)"'
+    label3: '"2 f1 - f2 (dBFS)"'
+    label4: '"2 f2 - f1 (dBFS)"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 388
+    - 668
+    rotation: 0
+    state: enabled
+- name: t1_band
+  id: freq_xlating_fir_filter_xxx
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    type: ccf
+    decim: '64'
+    taps: firdes.low_pass(1, samp_rate, bw_tone/2, bw_tone/2)
+    center_freq: f1
+    samp_rate: samp_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 578
+    - 668
+    rotation: 0
+    state: enabled
+- name: t1_rms
+  id: blocks_rms_xx
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    type: complex
+    alpha: 1e-3
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 768
+    - 668
+    rotation: 0
+    state: enabled
+- name: t1_db
+  id: blocks_nlog10_ff
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    n: '20'
+    k: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 958
+    - 668
+    rotation: 0
+    state: enabled
+- name: t2_band
+  id: freq_xlating_fir_filter_xxx
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    type: ccf
+    decim: '64'
+    taps: firdes.low_pass(1, samp_rate, bw_tone/2, bw_tone/2)
+    center_freq: f2
+    samp_rate: samp_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1148
+    - 668
+    rotation: 0
+    state: enabled
+- name: t2_rms
+  id: blocks_rms_xx
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    type: complex
+    alpha: 1e-3
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 8
+    - 778
+    rotation: 0
+    state: enabled
+- name: t2_db
+  id: blocks_nlog10_ff
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    n: '20'
+    k: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 198
+    - 778
+    rotation: 0
+    state: enabled
+- name: im_lo_band
+  id: freq_xlating_fir_filter_xxx
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    type: ccf
+    decim: '64'
+    taps: firdes.low_pass(1, samp_rate, bw_tone/2, bw_tone/2)
+    center_freq: 2*f1 - f2
+    samp_rate: samp_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 388
+    - 778
+    rotation: 0
+    state: enabled
+- name: im_lo_rms
+  id: blocks_rms_xx
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    type: complex
+    alpha: 1e-3
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 578
+    - 778
+    rotation: 0
+    state: enabled
+- name: im_lo_db
+  id: blocks_nlog10_ff
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    n: '20'
+    k: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 768
+    - 778
+    rotation: 0
+    state: enabled
+- name: im_hi_band
+  id: freq_xlating_fir_filter_xxx
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    type: ccf
+    decim: '64'
+    taps: firdes.low_pass(1, samp_rate, bw_tone/2, bw_tone/2)
+    center_freq: 2*f2 - f1
+    samp_rate: samp_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 958
+    - 778
+    rotation: 0
+    state: enabled
+- name: im_hi_rms
+  id: blocks_rms_xx
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    type: complex
+    alpha: 1e-3
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1148
+    - 778
+    rotation: 0
+    state: enabled
+- name: im_hi_db
+  id: blocks_nlog10_ff
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    n: '20'
+    k: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 8
+    - 888
+    rotation: 0
+    state: enabled
+- name: total_rms
+  id: blocks_rms_xx
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    type: complex
+    alpha: 1e-4
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 198
+    - 888
+    rotation: 0
+    state: enabled
+- name: total_log
+  id: blocks_nlog10_ff
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    n: '20'
+    k: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 388
+    - 888
+    rotation: 0
+    state: enabled
+- name: total_num
+  id: qtgui_number_sink
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    name: '"Total level (dBFS)"'
+    type: float
+    autoscale: 'False'
+    avg: '0'
+    graph_type: qtgui.NUM_GRAPH_HORIZ
+    nconnections: '1'
+    min: '-100'
+    max: '0'
+    update_time: '0.10'
+    gui_hint: ''
+    label1: ''
+    unit1: dB
+    color1: ("black", "black")
+    factor1: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 578
+    - 888
+    rotation: 0
+    state: enabled
+- name: spec
+  id: qtgui_freq_sink_x
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    minoutbuf: '0'
+    maxoutbuf: '0'
+    type: complex
+    name: '"Spectrum at the receiver output"'
+    fftsize: '4096'
+    freqhalf: 'True'
+    wintype: window.WIN_BLACKMAN_hARRIS
+    norm_window: 'False'
+    fc: '0'
+    bw: samp_rate
+    grid: 'True'
+    autoscale: 'False'
+    average: '0.05'
+    ymin: '-140'
+    ymax: '0'
+    label: Relative Gain
+    units: dB
+    nconnections: '1'
+    update_time: '0.10'
+    showports: 'False'
+    gui_hint: ''
+    ctrlpanel: 'True'
+    legend: 'True'
+    axislabels: 'True'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_level: '0.0'
+    tr_chan: '0'
+    tr_tag: '""'
+    label1: ''
+    label2: ''
+    width1: '1'
+    width2: '1'
+    color1: '"blue"'
+    color2: '"red"'
+    alpha1: '1.0'
+    alpha2: '1.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 768
+    - 888
+    rotation: 0
+    state: enabled
+- name: center_freq
+  id: variable
+  parameters:
+    value: 100e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1250
+    - 8
+    rotation: 0
+    state: enabled
+- name: freq_error_hz
+  id: variable
+  parameters:
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1450
+    - 8
+    rotation: 0
+    state: enabled
+- name: rtl_source
+  id: soapy_rtlsdr_source
+  parameters:
+    type: fc32
+    dev_args: ''
+    samp_rate: samp_rate
+    center_freq: center_freq
+    freq_correction: '0'
+    agc: 'False'
+    gain: gain
+    bias: 'False'
+    bufflen: '16384'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 8
+    - 350
+    rotation: 0
+    state: enabled
+- name: fine_rotator
+  id: blocks_rotator_cc
+  parameters:
+    phase_inc: -2*math.pi*freq_error_hz/samp_rate
+    tag_inc_update: 'False'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 300
+    - 350
+    rotation: 0
+    state: enabled
+connections:
+- - fine_rotator
+  - '0'
+  - noise_band
+  - '0'
+- - noise_band
+  - '0'
+  - noise_rms
+  - '0'
+- - noise_rms
+  - '0'
+  - noise_db
+  - '0'
+- - noise_db
+  - '0'
+  - noise_num
+  - '0'
+- - fine_rotator
+  - '0'
+  - t1_band
+  - '0'
+- - t1_band
+  - '0'
+  - t1_rms
+  - '0'
+- - t1_rms
+  - '0'
+  - t1_db
+  - '0'
+- - t1_db
+  - '0'
+  - tone_num
+  - '0'
+- - fine_rotator
+  - '0'
+  - t2_band
+  - '0'
+- - t2_band
+  - '0'
+  - t2_rms
+  - '0'
+- - t2_rms
+  - '0'
+  - t2_db
+  - '0'
+- - t2_db
+  - '0'
+  - tone_num
+  - '1'
+- - fine_rotator
+  - '0'
+  - im_lo_band
+  - '0'
+- - im_lo_band
+  - '0'
+  - im_lo_rms
+  - '0'
+- - im_lo_rms
+  - '0'
+  - im_lo_db
+  - '0'
+- - im_lo_db
+  - '0'
+  - tone_num
+  - '2'
+- - fine_rotator
+  - '0'
+  - im_hi_band
+  - '0'
+- - im_hi_band
+  - '0'
+  - im_hi_rms
+  - '0'
+- - im_hi_rms
+  - '0'
+  - im_hi_db
+  - '0'
+- - im_hi_db
+  - '0'
+  - tone_num
+  - '3'
+- - fine_rotator
+  - '0'
+  - total_rms
+  - '0'
+- - total_rms
+  - '0'
+  - total_log
+  - '0'
+- - total_log
+  - '0'
+  - total_num
+  - '0'
+- - fine_rotator
+  - '0'
+  - spec
+  - '0'
+- - rtl_source
+  - '0'
+  - fine_rotator
+  - '0'
+metadata:
+  file_format: 1
+  grc_version: 3.10.9.2

@@ -1,0 +1,661 @@
+options:
+  parameters: {author: SDR Lab, catch_exceptions: 'True', category: '[GRC Hier Blocks]', cmake_opt: '', comment: '', copyright: '', description: '', gen_cmake: 'On', gen_linking: dynamic, generate_options: qt_gui, hier_block_src_path: '.:', id: lab08_sim, max_nouts: '0', output_language: python, placement: '(0,0)', qt_qss_theme: '', realtime_scheduling: '', run: 'True', run_command: '{python} -u {filename}', run_options: prompt, sizing_mode: fixed, thread_safe_setters: '', title: 'SDR Lab 08 - receiver model: noise figure, P1dB and IIP3 (no hardware)', window_size: '(1000,1000)'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+blocks:
+- name: import_0
+  id: import
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', imports: import math}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [198, 8]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', value: 2.048e6}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [388, 8]
+    rotation: 0
+    state: enabled
+- name: nf_fe
+  id: variable
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', value: '6.0'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [578, 8]
+    rotation: 0
+    state: enabled
+- name: iip3_fe
+  id: variable
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', value: '-25.0'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [768, 8]
+    rotation: 0
+    state: enabled
+- name: p_fs0
+  id: variable
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', value: '-30.0'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [958, 8]
+    rotation: 0
+    state: enabled
+- name: kt0_fs
+  id: variable
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', value: 10**((-173.98 + 10*math.log10(samp_rate))/10)}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1148, 8]
+    rotation: 0
+    state: enabled
+- name: mode
+  id: variable_qtgui_chooser
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', label: Source, type: int, num_opts: '4', value: '0', widget: combo_box, orient: Qt.QVBoxLayout, options: '[0, 1, 2]', labels: '[]', gui_hint: '', option0: '0', label0: Off (50 ohm at 290 K), option1: '1', label1: Noise source on, option2: '2', label2: One tone, option3: '3', label3: Two tones}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 118]
+    rotation: 0
+    state: enabled
+- name: p_in
+  id: variable_qtgui_range
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', label: 'Tone power at the input, per tone (dBm)', value: '-80', start: '-110', stop: '-10', step: '0.5', widget: counter_slider, rangeType: float, orient: QtCore.Qt.Horizontal, min_len: '200', gui_hint: ''}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [198, 118]
+    rotation: 0
+    state: enabled
+- name: enr_db
+  id: variable_qtgui_range
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', label: ENR of the noise source (dB), value: '15', start: '0', stop: '60', step: '1', widget: counter_slider, rangeType: float, orient: QtCore.Qt.Horizontal, min_len: '200', gui_hint: ''}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [388, 118]
+    rotation: 0
+    state: enabled
+- name: gain
+  id: variable_qtgui_range
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', label: Receiver gain (dB), value: '40', start: '0', stop: '50', step: '1', widget: counter_slider, rangeType: float, orient: QtCore.Qt.Horizontal, min_len: '200', gui_hint: ''}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [578, 118]
+    rotation: 0
+    state: enabled
+- name: tone1
+  id: analog_sig_source_x
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: complex, samp_rate: samp_rate, waveform: analog.GR_COS_WAVE, freq: f1, amp: (mode >= 2)*math.sqrt(10**(p_in/10)), offset: '0', phase: '0', showports: 'False'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [768, 118]
+    rotation: 0
+    state: enabled
+- name: tone2
+  id: analog_sig_source_x
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: complex, samp_rate: samp_rate, waveform: analog.GR_COS_WAVE, freq: f2, amp: (mode == 3)*math.sqrt(10**(p_in/10)), offset: '0', phase: '0', showports: 'False'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [958, 118]
+    rotation: 0
+    state: enabled
+- name: thermal_noise
+  id: analog_noise_source_x
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: complex, noise_type: analog.GR_GAUSSIAN, amp: math.sqrt(kt0_fs*(1 + (mode == 1)*10**(enr_db/10)) + kt0_fs*(10**(nf_fe/10) - 1)), seed: '0'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1148, 118]
+    rotation: 0
+    state: enabled
+- name: input_sum
+  id: blocks_add_xx
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: complex, num_inputs: '3', vlen: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 228]
+    rotation: 0
+    state: enabled
+- name: throttle
+  id: blocks_throttle2
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: complex, samples_per_second: samp_rate, vlen: '1', ignoretag: 'True', limit: auto, maximum: '0.1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [198, 228]
+    rotation: 0
+    state: enabled
+- name: env_power
+  id: blocks_complex_to_mag_squared
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', vlen: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [388, 228]
+    rotation: 0
+    state: enabled
+- name: cubic_coeff
+  id: blocks_multiply_const_vxx
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: float, const: -1/10**(iip3_fe/10), vlen: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [578, 228]
+    rotation: 0
+    state: enabled
+- name: one_minus
+  id: blocks_add_const_vxx
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: float, const: '1.0', vlen: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [768, 228]
+    rotation: 0
+    state: enabled
+- name: zero
+  id: analog_const_source_x
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: float, const: '0'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [958, 228]
+    rotation: 0
+    state: enabled
+- name: gain_factor
+  id: blocks_float_to_complex
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', vlen: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1148, 228]
+    rotation: 0
+    state: enabled
+- name: front_end
+  id: blocks_multiply_xx
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: complex, num_inputs: '2', vlen: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 338]
+    rotation: 0
+    state: enabled
+- name: rx_gain
+  id: blocks_multiply_const_vxx
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: complex, const: 10**((gain - p_fs0)/20), vlen: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [198, 338]
+    rotation: 0
+    state: enabled
+- name: adc_noise
+  id: analog_noise_source_x
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: complex, noise_type: analog.GR_GAUSSIAN, amp: 0.5*math.sqrt(2)/127, seed: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [388, 338]
+    rotation: 0
+    state: enabled
+- name: adc_input
+  id: blocks_add_xx
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: complex, num_inputs: '2', vlen: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [578, 338]
+    rotation: 0
+    state: enabled
+- name: to_iq
+  id: blocks_complex_to_float
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', vlen: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [768, 338]
+    rotation: 0
+    state: enabled
+- name: adc_out
+  id: blocks_float_to_complex
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', vlen: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [958, 338]
+    rotation: 0
+    state: enabled
+- name: clip_i
+  id: analog_rail_ff
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', lo: '-1.0', hi: '1.0'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1148, 338]
+    rotation: 0
+    state: enabled
+- name: scale_i
+  id: blocks_multiply_const_vxx
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: float, const: '127', vlen: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 448]
+    rotation: 0
+    state: enabled
+- name: round_i
+  id: blocks_float_to_char
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', vlen: '1', scale: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [198, 448]
+    rotation: 0
+    state: enabled
+- name: back_i
+  id: blocks_char_to_float
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', vlen: '1', scale: '127'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [388, 448]
+    rotation: 0
+    state: enabled
+- name: clip_q
+  id: analog_rail_ff
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', lo: '-1.0', hi: '1.0'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [578, 448]
+    rotation: 0
+    state: enabled
+- name: scale_q
+  id: blocks_multiply_const_vxx
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: float, const: '127', vlen: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [768, 448]
+    rotation: 0
+    state: enabled
+- name: round_q
+  id: blocks_float_to_char
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', vlen: '1', scale: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [958, 448]
+    rotation: 0
+    state: enabled
+- name: back_q
+  id: blocks_char_to_float
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', vlen: '1', scale: '127'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1148, 448]
+    rotation: 0
+    state: enabled
+- name: f1
+  id: variable
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', value: 300e3}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 558]
+    rotation: 0
+    state: enabled
+- name: f2
+  id: variable
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', value: 400e3}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [198, 558]
+    rotation: 0
+    state: enabled
+- name: f_noise
+  id: variable
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', value: -500e3}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [388, 558]
+    rotation: 0
+    state: enabled
+- name: bw_noise
+  id: variable
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', value: 400e3}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [578, 558]
+    rotation: 0
+    state: enabled
+- name: bw_tone
+  id: variable
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', value: 10e3}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [768, 558]
+    rotation: 0
+    state: enabled
+- name: noise_band
+  id: freq_xlating_fir_filter_xxx
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: ccf, decim: '4', taps: 'firdes.low_pass(1, samp_rate, bw_noise/2, bw_noise/4)', center_freq: f_noise, samp_rate: samp_rate}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [958, 558]
+    rotation: 0
+    state: enabled
+- name: noise_rms
+  id: blocks_rms_xx
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: complex, alpha: 2e-5}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1148, 558]
+    rotation: 0
+    state: enabled
+- name: noise_db
+  id: blocks_nlog10_ff
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', n: '20', k: '0', vlen: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 668]
+    rotation: 0
+    state: enabled
+- name: noise_num
+  id: qtgui_number_sink
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', name: '"Noise power in the 400 kHz band (dBFS)"', type: float, autoscale: 'False', avg: '0', graph_type: qtgui.NUM_GRAPH_HORIZ, nconnections: '1', min: '-120', max: '0', update_time: '0.10', gui_hint: '', label1: '', unit1: dBFS, color1: '("black", "black")', factor1: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [198, 668]
+    rotation: 0
+    state: enabled
+- name: tone_num
+  id: qtgui_number_sink
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', name: '"Tone meters (10 kHz each)"', type: float, autoscale: 'False', avg: '0', graph_type: qtgui.NUM_GRAPH_NONE, nconnections: '4', min: '-140', max: '0', update_time: '0.10', label1: '"f1 (dBFS)"', label2: '"f2 (dBFS)"', label3: '"2 f1 - f2 (dBFS)"', label4: '"2 f2 - f1 (dBFS)"'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [388, 668]
+    rotation: 0
+    state: enabled
+- name: t1_band
+  id: freq_xlating_fir_filter_xxx
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: ccf, decim: '64', taps: 'firdes.low_pass(1, samp_rate, bw_tone/2, bw_tone/2)', center_freq: f1, samp_rate: samp_rate}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [578, 668]
+    rotation: 0
+    state: enabled
+- name: t1_rms
+  id: blocks_rms_xx
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: complex, alpha: 1e-3}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [768, 668]
+    rotation: 0
+    state: enabled
+- name: t1_db
+  id: blocks_nlog10_ff
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', n: '20', k: '0', vlen: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [958, 668]
+    rotation: 0
+    state: enabled
+- name: t2_band
+  id: freq_xlating_fir_filter_xxx
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: ccf, decim: '64', taps: 'firdes.low_pass(1, samp_rate, bw_tone/2, bw_tone/2)', center_freq: f2, samp_rate: samp_rate}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1148, 668]
+    rotation: 0
+    state: enabled
+- name: t2_rms
+  id: blocks_rms_xx
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: complex, alpha: 1e-3}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 778]
+    rotation: 0
+    state: enabled
+- name: t2_db
+  id: blocks_nlog10_ff
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', n: '20', k: '0', vlen: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [198, 778]
+    rotation: 0
+    state: enabled
+- name: im_lo_band
+  id: freq_xlating_fir_filter_xxx
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: ccf, decim: '64', taps: 'firdes.low_pass(1, samp_rate, bw_tone/2, bw_tone/2)', center_freq: 2*f1 - f2, samp_rate: samp_rate}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [388, 778]
+    rotation: 0
+    state: enabled
+- name: im_lo_rms
+  id: blocks_rms_xx
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: complex, alpha: 1e-3}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [578, 778]
+    rotation: 0
+    state: enabled
+- name: im_lo_db
+  id: blocks_nlog10_ff
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', n: '20', k: '0', vlen: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [768, 778]
+    rotation: 0
+    state: enabled
+- name: im_hi_band
+  id: freq_xlating_fir_filter_xxx
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: ccf, decim: '64', taps: 'firdes.low_pass(1, samp_rate, bw_tone/2, bw_tone/2)', center_freq: 2*f2 - f1, samp_rate: samp_rate}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [958, 778]
+    rotation: 0
+    state: enabled
+- name: im_hi_rms
+  id: blocks_rms_xx
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: complex, alpha: 1e-3}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1148, 778]
+    rotation: 0
+    state: enabled
+- name: im_hi_db
+  id: blocks_nlog10_ff
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', n: '20', k: '0', vlen: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 888]
+    rotation: 0
+    state: enabled
+- name: total_rms
+  id: blocks_rms_xx
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: complex, alpha: 1e-4}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [198, 888]
+    rotation: 0
+    state: enabled
+- name: total_log
+  id: blocks_nlog10_ff
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', n: '20', k: '0', vlen: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [388, 888]
+    rotation: 0
+    state: enabled
+- name: total_num
+  id: qtgui_number_sink
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', name: '"Total level (dBFS)"', type: float, autoscale: 'False', avg: '0', graph_type: qtgui.NUM_GRAPH_HORIZ, nconnections: '1', min: '-100', max: '0', update_time: '0.10', gui_hint: '', label1: '', unit1: dB, color1: '("black", "black")', factor1: '1'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [578, 888]
+    rotation: 0
+    state: enabled
+- name: spec
+  id: qtgui_freq_sink_x
+  parameters: {alias: '', comment: '', affinity: '', minoutbuf: '0', maxoutbuf: '0', type: complex, name: '"Spectrum at the receiver output"', fftsize: '4096', freqhalf: 'True', wintype: window.WIN_BLACKMAN_hARRIS, norm_window: 'False', fc: '0', bw: samp_rate, grid: 'True', autoscale: 'False', average: '0.05', ymin: '-140', ymax: '0', label: Relative Gain, units: dB, nconnections: '1', update_time: '0.10', showports: 'False', gui_hint: '', ctrlpanel: 'True', legend: 'True', axislabels: 'True', tr_mode: qtgui.TRIG_MODE_FREE, tr_level: '0.0', tr_chan: '0', tr_tag: '""', label1: '', label2: '', width1: '1', width2: '1', color1: '"blue"', color2: '"red"', alpha1: '1.0', alpha2: '1.0'}
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [768, 888]
+    rotation: 0
+    state: enabled
+connections:
+- [tone1, '0', input_sum, '0']
+- [tone2, '0', input_sum, '1']
+- [thermal_noise, '0', input_sum, '2']
+- [input_sum, '0', throttle, '0']
+- [throttle, '0', env_power, '0']
+- [env_power, '0', cubic_coeff, '0']
+- [cubic_coeff, '0', one_minus, '0']
+- [one_minus, '0', gain_factor, '0']
+- [zero, '0', gain_factor, '1']
+- [throttle, '0', front_end, '0']
+- [gain_factor, '0', front_end, '1']
+- [front_end, '0', rx_gain, '0']
+- [rx_gain, '0', adc_input, '0']
+- [adc_noise, '0', adc_input, '1']
+- [adc_input, '0', to_iq, '0']
+- [to_iq, '0', clip_i, '0']
+- [clip_i, '0', scale_i, '0']
+- [scale_i, '0', round_i, '0']
+- [round_i, '0', back_i, '0']
+- [back_i, '0', adc_out, '0']
+- [to_iq, '1', clip_q, '0']
+- [clip_q, '0', scale_q, '0']
+- [scale_q, '0', round_q, '0']
+- [round_q, '0', back_q, '0']
+- [back_q, '0', adc_out, '1']
+- [adc_out, '0', noise_band, '0']
+- [noise_band, '0', noise_rms, '0']
+- [noise_rms, '0', noise_db, '0']
+- [noise_db, '0', noise_num, '0']
+- [adc_out, '0', t1_band, '0']
+- [t1_band, '0', t1_rms, '0']
+- [t1_rms, '0', t1_db, '0']
+- [t1_db, '0', tone_num, '0']
+- [adc_out, '0', t2_band, '0']
+- [t2_band, '0', t2_rms, '0']
+- [t2_rms, '0', t2_db, '0']
+- [t2_db, '0', tone_num, '1']
+- [adc_out, '0', im_lo_band, '0']
+- [im_lo_band, '0', im_lo_rms, '0']
+- [im_lo_rms, '0', im_lo_db, '0']
+- [im_lo_db, '0', tone_num, '2']
+- [adc_out, '0', im_hi_band, '0']
+- [im_hi_band, '0', im_hi_rms, '0']
+- [im_hi_rms, '0', im_hi_db, '0']
+- [im_hi_db, '0', tone_num, '3']
+- [adc_out, '0', total_rms, '0']
+- [total_rms, '0', total_log, '0']
+- [total_log, '0', total_num, '0']
+- [adc_out, '0', spec, '0']
+metadata: {file_format: 1, grc_version: 3.10.9.2}
