@@ -36,3 +36,7 @@ Upload this folder's contents to the root of main in the public sdr-course repos
 
 Repository: https://github.com/msh04/sdr-course
 
+
+## Prelab 2 — Group 06
+
+[Prelab2.pdf](files/pre-lab-reports/prelab2/Prelab2.pdf), 10 Python/MATLAB/GNU Radio code and flowgraph files, and 15 CSV/JSON simulation data files are available in the Pre-Lab Reports tab. The download bundle includes these 26 files. Images, fonts, HTML and LaTeX source are excluded.

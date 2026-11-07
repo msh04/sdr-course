@@ -23,4 +23,8 @@ tabs.forEach((tab, index) => {
     }
   });
 });
-selectTab(tabs[0]);
+function selectLinkedSection() {
+  selectTab(location.hash === '#prelab2' ? document.getElementById('tab-prelab') : tabs[0]);
+}
+window.addEventListener('hashchange', selectLinkedSection);
+selectLinkedSection();
