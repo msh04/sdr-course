@@ -1,49 +1,98 @@
 <!doctype html>
+
 <html lang="en" dir="ltr">
+
 <head>
+
   <meta charset="utf-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <meta name="description" content="Software Defined Radio course materials: lab instructions, pre-lab reports, and lab reports.">
+
   <meta name="theme-color" content="#123b38">
+
   <title>SDR | Course Materials</title>
+
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
   <link rel="stylesheet" href="style.css">
+
   <script src="app.js" defer></script>
+
 </head>
+
 <body>
+
   <header class="header">
+
     <div class="wrap brand"><span class="brand-icon" aria-hidden="true">∿</span><span>SDR <span class="brand-light">/ LAB</span></span></div>
+
   </header>
+
   <main class="wrap">
+
     <div class="page-heading">
+
       <p class="eyebrow">SOFTWARE DEFINED RADIO</p>
+
       <h1>Course materials</h1>
+
     </div>
+
     <div class="tabs" role="tablist" aria-label="Course materials">
+
       <button type="button" id="tab-instructions" role="tab" aria-selected="true" aria-controls="panel-instructions" tabindex="0">Lab Instructions</button>
+
       <button type="button" id="tab-prelab" role="tab" aria-selected="false" aria-controls="panel-prelab" tabindex="-1">Pre-Lab Reports</button>
+
       <button type="button" id="tab-reports" role="tab" aria-selected="false" aria-controls="panel-reports" tabindex="-1">Lab Reports</button>
+
     </div>
+
     <section id="panel-instructions" class="panel" role="tabpanel" aria-labelledby="tab-instructions" tabindex="0">
+
       <div class="panel-heading"><h2>Lab Instructions</h2><span class="file-count">0 files</span></div>
+
       <div class="files"><div class="empty-state"><h3>No lab instructions yet</h3><p>Lab instruction files will appear here when available.</p></div></div>
+
     </section>
+
     <section id="panel-prelab" class="panel" role="tabpanel" aria-labelledby="tab-prelab" tabindex="0">
+
       <div class="panel-heading"><h2>Pre-Lab Reports</h2><span class="file-count">1 report · 26 files</span></div>
+
       <div class="files">
+
         <article class="report-card" id="prelab2">
+
           <div class="report-intro"><span class="report-label">LAB 02 · GROUP 06</span><h3>Prelab 2</h3><p>Noise figure, P1dB, IIP3, and antenna response.</p></div>
-          <div class="report-actions"><a class="download-link report-primary" href="files/pre-lab-reports/prelab2/Prelab2.pdf" target="_blank" rel="noopener">Open Prelab2.pdf</a><a class="download-link" href="files/pre-lab-reports/prelab2/Prelab2.pdf" download>Download PDF</a><a class="download-link" href="files/pre-lab-reports/prelab2/Prelab2-supporting-files.zip" download>Download all files</a></div>
-          <details class="report-attachments" open><summary>Code and simulation files <span>10 files</span></summary><ul class="attachment-list"><li><a href="files/pre-lab-reports/prelab2/files/antenna_measure.py" download>files/antenna_measure.py</a><span>3 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/gnuradio_measurements.py" download>files/gnuradio_measurements.py</a><span>4 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/lab02_antenna_response_simulation.py" download>files/lab02_antenna_response_simulation.py</a><span>9 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/lab02_meas.grc" download>files/lab02_meas.grc</a><span>15 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/lab02_meas.py" download>files/lab02_meas.py</a><span>17 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/lab02_sim.grc" download>files/lab02_sim.grc</a><span>22 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/lab02_sim.py" download>files/lab02_sim.py</a><span>21 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/make_report.m" download>files/make_report.m</a><span>9 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/sim_measure.py" download>files/sim_measure.py</a><span>5 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/theory_calculations.m" download>files/theory_calculations.m</a><span>2 KB</span></li></ul></details>
-          <details class="report-attachments"><summary>Simulation data <span>15 files</span></summary><ul class="attachment-list"><li><a href="files/pre-lab-reports/prelab2/files/out/analysis_results.json" download>files/out/analysis_results.json</a><span>9 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/antenna.csv" download>files/out/antenna.csv</a><span>4 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/antenna.json" download>files/out/antenna.json</a><span>11 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/antenna_fine.csv" download>files/out/antenna_fine.csv</a><span>2 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/gain_comparison.csv" download>files/out/gain_comparison.csv</a><span>1 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/noise_repeats.csv" download>files/out/noise_repeats.csv</a><span>1 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/noise_summary.csv" download>files/out/noise_summary.csv</a><span>1 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/p1db_summary.csv" download>files/out/p1db_summary.csv</a><span>1 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/sim_results.json" download>files/out/sim_results.json</a><span>20 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/single_tone_sweeps.csv" download>files/out/single_tone_sweeps.csv</a><span>3 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/theory_noise_temperature.csv" download>files/out/theory_noise_temperature.csv</a><span>1 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/theory_results.json" download>files/out/theory_results.json</a><span>1 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/theory_sensitivity.csv" download>files/out/theory_sensitivity.csv</a><span>1 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/theory_sfdr.csv" download>files/out/theory_sfdr.csv</a><span>1 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/two_tone.csv" download>files/out/two_tone.csv</a><span>4 KB</span></li></ul></details>
+
+          <div class="report-actions"><a class="download-link report-primary" href="files/pre-lab-reports/prelab2/Prelab2.pdf?v=0ee74c4bf16e" target="_blank" rel="noopener">Open Prelab2.pdf</a><a class="download-link" href="files/pre-lab-reports/prelab2/Prelab2.pdf?v=0ee74c4bf16e" download>Download PDF</a><a class="download-link" href="files/pre-lab-reports/prelab2/Prelab2-supporting-files.zip?v=5a1eed3eb9a3" download>Download all files</a></div>
+
+          <details class="report-attachments" open><summary>Code and simulation files <span>10 files</span></summary><ul class="attachment-list"><li><a href="files/pre-lab-reports/prelab2/files/antenna_measure.py?v=d9c846efb496" download>files/antenna_measure.py</a><span>3 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/gnuradio_measurements.py?v=4ecfdcc80ea0" download>files/gnuradio_measurements.py</a><span>4 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/lab02_antenna_response_simulation.py?v=7e654fc6bc8c" download>files/lab02_antenna_response_simulation.py</a><span>9 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/lab02_meas.grc?v=4a89eedb2848" download>files/lab02_meas.grc</a><span>15 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/lab02_meas.py?v=c20b7711e117" download>files/lab02_meas.py</a><span>16 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/lab02_sim.grc?v=7b4ced078911" download>files/lab02_sim.grc</a><span>22 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/lab02_sim.py?v=92a11e8a1819" download>files/lab02_sim.py</a><span>21 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/make_report.m?v=04c2774ba9b6" download>files/make_report.m</a><span>10 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/sim_measure.py?v=5a8f60ea005b" download>files/sim_measure.py</a><span>5 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/theory_calculations.m?v=90350f51214b" download>files/theory_calculations.m</a><span>2 KB</span></li></ul></details>
+
+          <details class="report-attachments"><summary>Simulation data <span>15 files</span></summary><ul class="attachment-list"><li><a href="files/pre-lab-reports/prelab2/files/out/analysis_results.json?v=2ed0c59f4d48" download>files/out/analysis_results.json</a><span>9 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/antenna.csv?v=7391451ed11a" download>files/out/antenna.csv</a><span>4 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/antenna.json?v=6bf2cbea9396" download>files/out/antenna.json</a><span>11 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/antenna_fine.csv?v=658bb890f8c8" download>files/out/antenna_fine.csv</a><span>2 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/gain_comparison.csv?v=8f0c1cefbc31" download>files/out/gain_comparison.csv</a><span>1 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/noise_repeats.csv?v=a63727d83273" download>files/out/noise_repeats.csv</a><span>1 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/noise_summary.csv?v=6878d2c0e6c9" download>files/out/noise_summary.csv</a><span>1 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/p1db_summary.csv?v=00fb175b623c" download>files/out/p1db_summary.csv</a><span>1 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/sim_results.json?v=63eb5c8ac810" download>files/out/sim_results.json</a><span>20 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/single_tone_sweeps.csv?v=1863ff13d14e" download>files/out/single_tone_sweeps.csv</a><span>3 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/theory_noise_temperature.csv?v=f86d37cc827d" download>files/out/theory_noise_temperature.csv</a><span>1 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/theory_results.json?v=7ef46a80d0d6" download>files/out/theory_results.json</a><span>2 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/theory_sensitivity.csv?v=0f376198753d" download>files/out/theory_sensitivity.csv</a><span>1 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/theory_sfdr.csv?v=ef4a79690609" download>files/out/theory_sfdr.csv</a><span>1 KB</span></li><li><a href="files/pre-lab-reports/prelab2/files/out/two_tone.csv?v=26afca5ac200" download>files/out/two_tone.csv</a><span>4 KB</span></li></ul></details>
+
         </article>
+
       </div>
+
     </section>
+
     <section id="panel-reports" class="panel" role="tabpanel" aria-labelledby="tab-reports" tabindex="0">
+
       <div class="panel-heading"><h2>Lab Reports</h2><span class="file-count">0 files</span></div>
+
       <div class="files"><div class="empty-state"><h3>No lab reports yet</h3><p>Lab report files will appear here when available.</p></div></div>
+
     </section>
+
     <noscript><p class="noscript-note">JavaScript is disabled. All three sections are shown.</p></noscript>
+
   </main>
+
 </body>
+
 </html>
+
