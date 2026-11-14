@@ -1,0 +1,13 @@
+quantity,attenuation_exact_db,attenuation_setting_db,level_db,level_kind
+"Single-tone minimum attenuation",17.0848501887865,17.25,-10.1651498112135,"Total power, worst case"
+"Two-tone minimum attenuation",14.0745502321467,14.25,-10.1754497678533,"Total mean power, worst case"
+"Two-tone envelope peak",NaN,14.25,-7.1651498112135,"Envelope peak, worst case"
+"Calibration tone",60,60,-54.4151498112135,"Tone input power"
+"ENR 15 dB",61.6978875828839,61.75,14.9478875828839,"ENR"
+"ENR 25 dB",51.6978875828839,51.75,24.9478875828839,"ENR"
+"Single tone gain 40 start",55.5848501887865,55.75,-50.1651498112135,"Tone input power"
+"Single tone gain 40 end",20.5848501887865,20.75,-15.1651498112135,"Tone input power"
+"Single tone gain 50 start",65.5848501887865,65.75,-60.1651498112135,"Tone input power"
+"Single tone gain 50 end",30.5848501887865,30.75,-25.1651498112135,"Tone input power"
+"Two tones gain 40 start, per tone",37.5642502755069,37.75,-38.1857497244931,"Input power per tone"
+"Two tones gain 40 end, per tone",21.5642502755069,21.75,-22.1857497244931,"Input power per tone"

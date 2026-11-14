@@ -1,0 +1,7 @@
+quantity,prediction,unit,measured
+"NF at gain 50",6.05451563739929,dB,
+"NF at gain 40",6.51329761608104,dB,
+"NF at gain 30",9.54506930115466,dB,
+"Input P1dB at gain 40",-67.9973837760406,dBm,
+"Input P1dB at gain 50",-78.011127165178,dBm,
+"IM3 onset at gain 40, per tone",-76.0205999132796,dBm,
