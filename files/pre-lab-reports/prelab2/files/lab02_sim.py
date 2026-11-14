@@ -31,7 +31,7 @@ import threading
 
 
 
-class lab08_sim(gr.top_block, Qt.QWidget):
+class lab02_sim(gr.top_block, Qt.QWidget):
 
     def __init__(self):
         gr.top_block.__init__(self, "SDR Lab 08 - receiver model: noise figure, P1dB and IIP3 (no hardware)", catch_exceptions=True)
@@ -54,7 +54,7 @@ class lab08_sim(gr.top_block, Qt.QWidget):
         self.top_grid_layout = Qt.QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
 
-        self.settings = Qt.QSettings("gnuradio/flowgraphs", "lab08_sim")
+        self.settings = Qt.QSettings("gnuradio/flowgraphs", "lab02_sim")
 
         try:
             geometry = self.settings.value("geometry")
@@ -350,7 +350,7 @@ class lab08_sim(gr.top_block, Qt.QWidget):
 
 
     def closeEvent(self, event):
-        self.settings = Qt.QSettings("gnuradio/flowgraphs", "lab08_sim")
+        self.settings = Qt.QSettings("gnuradio/flowgraphs", "lab02_sim")
         self.settings.setValue("geometry", self.saveGeometry())
         self.stop()
         self.wait()
@@ -363,15 +363,15 @@ class lab08_sim(gr.top_block, Qt.QWidget):
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
         self.set_kt0_fs(10**((-173.98 + 10*math.log10(self.samp_rate))/10))
-        self.im_hi_band.set_taps(firdes.low_pass(1, self.samp_rate, self.bw_tone/2, self.bw_tone/2))
-        self.im_lo_band.set_taps(firdes.low_pass(1, self.samp_rate, self.bw_tone/2, self.bw_tone/2))
-        self.noise_band.set_taps(firdes.low_pass(1, self.samp_rate, self.bw_noise/2, self.bw_noise/4))
-        self.spec.set_frequency_range(0, self.samp_rate)
-        self.t1_band.set_taps(firdes.low_pass(1, self.samp_rate, self.bw_tone/2, self.bw_tone/2))
-        self.t2_band.set_taps(firdes.low_pass(1, self.samp_rate, self.bw_tone/2, self.bw_tone/2))
-        self.throttle.set_sample_rate(self.samp_rate)
         self.tone1.set_sampling_freq(self.samp_rate)
         self.tone2.set_sampling_freq(self.samp_rate)
+        self.throttle.set_sample_rate(self.samp_rate)
+        self.noise_band.set_taps(firdes.low_pass(1, self.samp_rate, self.bw_noise/2, self.bw_noise/4))
+        self.t1_band.set_taps(firdes.low_pass(1, self.samp_rate, self.bw_tone/2, self.bw_tone/2))
+        self.t2_band.set_taps(firdes.low_pass(1, self.samp_rate, self.bw_tone/2, self.bw_tone/2))
+        self.im_lo_band.set_taps(firdes.low_pass(1, self.samp_rate, self.bw_tone/2, self.bw_tone/2))
+        self.im_hi_band.set_taps(firdes.low_pass(1, self.samp_rate, self.bw_tone/2, self.bw_tone/2))
+        self.spec.set_frequency_range(0, self.samp_rate)
 
     def get_p_in(self):
         return self.p_in
@@ -401,9 +401,9 @@ class lab08_sim(gr.top_block, Qt.QWidget):
     def set_mode(self, mode):
         self.mode = mode
         self._mode_callback(self.mode)
-        self.thermal_noise.set_amplitude((math.sqrt(self.kt0_fs*(1 + (self.mode == 1)*10**(self.enr_db/10)) + self.kt0_fs*(10**(self.nf_fe/10) - 1))))
         self.tone1.set_amplitude(((self.mode >= 2)*math.sqrt(10**(self.p_in/10))))
         self.tone2.set_amplitude(((self.mode == 3)*math.sqrt(10**(self.p_in/10))))
+        self.thermal_noise.set_amplitude((math.sqrt(self.kt0_fs*(1 + (self.mode == 1)*10**(self.enr_db/10)) + self.kt0_fs*(10**(self.nf_fe/10) - 1))))
 
     def get_kt0_fs(self):
         return self.kt0_fs
@@ -438,20 +438,20 @@ class lab08_sim(gr.top_block, Qt.QWidget):
 
     def set_f2(self, f2):
         self.f2 = f2
-        self.im_hi_band.set_center_freq((2*self.f2 - self.f1))
-        self.im_lo_band.set_center_freq((2*self.f1 - self.f2))
-        self.t2_band.set_center_freq(self.f2)
         self.tone2.set_frequency(self.f2)
+        self.t2_band.set_center_freq(self.f2)
+        self.im_lo_band.set_center_freq((2*self.f1 - self.f2))
+        self.im_hi_band.set_center_freq((2*self.f2 - self.f1))
 
     def get_f1(self):
         return self.f1
 
     def set_f1(self, f1):
         self.f1 = f1
-        self.im_hi_band.set_center_freq((2*self.f2 - self.f1))
-        self.im_lo_band.set_center_freq((2*self.f1 - self.f2))
-        self.t1_band.set_center_freq(self.f1)
         self.tone1.set_frequency(self.f1)
+        self.t1_band.set_center_freq(self.f1)
+        self.im_lo_band.set_center_freq((2*self.f1 - self.f2))
+        self.im_hi_band.set_center_freq((2*self.f2 - self.f1))
 
     def get_enr_db(self):
         return self.enr_db
@@ -465,10 +465,10 @@ class lab08_sim(gr.top_block, Qt.QWidget):
 
     def set_bw_tone(self, bw_tone):
         self.bw_tone = bw_tone
-        self.im_hi_band.set_taps(firdes.low_pass(1, self.samp_rate, self.bw_tone/2, self.bw_tone/2))
-        self.im_lo_band.set_taps(firdes.low_pass(1, self.samp_rate, self.bw_tone/2, self.bw_tone/2))
         self.t1_band.set_taps(firdes.low_pass(1, self.samp_rate, self.bw_tone/2, self.bw_tone/2))
         self.t2_band.set_taps(firdes.low_pass(1, self.samp_rate, self.bw_tone/2, self.bw_tone/2))
+        self.im_lo_band.set_taps(firdes.low_pass(1, self.samp_rate, self.bw_tone/2, self.bw_tone/2))
+        self.im_hi_band.set_taps(firdes.low_pass(1, self.samp_rate, self.bw_tone/2, self.bw_tone/2))
 
     def get_bw_noise(self):
         return self.bw_noise
@@ -480,7 +480,7 @@ class lab08_sim(gr.top_block, Qt.QWidget):
 
 
 
-def main(top_block_cls=lab08_sim, options=None):
+def main(top_block_cls=lab02_sim, options=None):
 
     qapp = Qt.QApplication(sys.argv)
 

@@ -1,4 +1,4 @@
-"""Task 4: finite acquisitions using genuine GNU Radio blocks. Run in radioconda."""
+"""Task 2: finite acquisitions using genuine GNU Radio blocks. Run in radioconda."""
 from gnuradio_measurements import *
 
 def main():
@@ -7,7 +7,7 @@ def main():
           'fs_hz':FS,'samples_per_record':N,'discard_samples':DISCARD,
           'nf_fe_db':NF_FE,'iip3_fe_dbm':IIP3,'pfs0_dbm':PFS,
           'method':'Genuine GNU Radio blocks; finite run; mean squared FIR output',
-          'records':{},'antenna':json.loads((DATA/'metadata.json').read_text())['antenna'] if (DATA/'metadata.json').exists() else {}}
+          'records':{}}
     noise_rows=[];nf_summary=[]
     for gain in range(0,51,10):
         enr=45 if gain==0 else 35 if gain<=20 else 15
