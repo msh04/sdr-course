@@ -1,0 +1,53 @@
+{
+  "method": "Display-image readings only; no raw-IQ reconstruction or Welch recomputation.",
+  "gsm": [
+    {
+      "candidate_mhz": 952.8,
+      "peak_relative_db": -63.78048780487805,
+      "local_floor_relative_db": -80.1219512195122,
+      "x_db": 6,
+      "fL_mhz": 952.7158719790987,
+      "fU_mhz": 952.8164598301763,
+      "Bx_khz": 100.58785107764834,
+      "midpoint_mhz": 952.7661659046375,
+      "pixel_khz": 13.063357282817378,
+      "trace": "instantaneous median pixel trace; NOT Max Hold",
+      "raw_B99": null
+    },
+    {
+      "candidate_mhz": 953.8,
+      "peak_relative_db": -82.1951219512195,
+      "local_floor_relative_db": -98.17073170731707,
+      "x_db": 6,
+      "fL_mhz": 953.7682258955937,
+      "fU_mhz": 953.9016764641846,
+      "Bx_khz": 133.450568590888,
+      "midpoint_mhz": 953.8349511798891,
+      "pixel_khz": 13.063357282817378,
+      "trace": "instantaneous median pixel trace; NOT Max Hold",
+      "raw_B99": null
+    },
+    {
+      "candidate_mhz": 954.2,
+      "peak_relative_db": -84.02439024390245,
+      "local_floor_relative_db": -94.6951219512195,
+      "x_db": 6,
+      "fL_mhz": 954.1798388852602,
+      "fU_mhz": 954.2922926192031,
+      "Bx_khz": 112.45373394285707,
+      "midpoint_mhz": 954.2360657522316,
+      "pixel_khz": 13.063357282817378,
+      "trace": "instantaneous median pixel trace; NOT Max Hold",
+      "raw_B99": null
+    }
+  ],
+  "baseline": {
+    "reference_db": -97.85907859078591,
+    "tolerance_db": 3,
+    "smoothing_pixels": 61,
+    "fL_mhz": 430.0663129973475,
+    "fU_mhz": 440.54376657824935,
+    "fraction_of_fs": 0.5238726790450926,
+    "interpretation": "Baseline flatness of this saved RF view, not calibrated filter bandwidth."
+  }
+}
