@@ -24,9 +24,10 @@ tabs.forEach((tab, index) => {
   });
 });
 function selectLinkedSection() {
-  const linkedTab = location.hash === '#prelab2' ? 'tab-prelab' : location.hash === '#lab1' ? 'tab-reports' : 'tab-instructions';
+  const linkedTab = ['#prelab2', '#prelab3'].includes(location.hash) ? 'tab-prelab' : location.hash === '#lab1' ? 'tab-reports' : 'tab-instructions';
   selectTab(document.getElementById(linkedTab));
 }
 window.addEventListener('hashchange', selectLinkedSection);
 selectLinkedSection();
+
 
